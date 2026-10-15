@@ -20,15 +20,16 @@ outdated. Please make sure you read the files before executing them, and check t
 
 * Edit ``conf/pretalx.cfg`` and fill in your own values (→ [configuration
   documentation](https://docs.pretalx.org/en/latest/administrator/configure.html))
-* Edit ``docker-compose.yml`` and change the line to ``ports: - "127.0.0.1:8346:80"`` (if you use nginx). **Change the
-  database password.**
+* **Change the database password.**
 * If you don't want to use docker volumes, create directories for the persistent data and make them read-writeable for
   the userid 999 and the groupid 999. Change ``pretalx-redis``, ``pretalx-database``, ``pretalx-data`` and ``pretalx-public`` to the corresponding
   directories you've chosen.
-* Configure a reverse-proxy for better security and to handle TLS. Pretalx listens on port 80 in the ``pretalxdocker``
-  network. You can find a few words on an nginx configuration at
-  ``reverse-proxy-examples/nginx``
-* Make sure you serve all requests for the `/static/` and `/media/` paths (when `debug=false`). See [installation](https://docs.pretalx.org/administrator/installation/#step-7-ssl) for more information
+* The ``nginx`` service publishes port 80, reverse-proxies pretalx, and serves ``/static/`` and ``/media/`` from the
+  ``pretalx-public`` volume (required when ``debug=false``). Pretalx itself is not published on the host. See
+  [installation](https://docs.pretalx.org/administrator/installation/#step-7-ssl) for why those paths must not be
+  served by the application.
+* For TLS, edit ``conf/nginx.conf`` and mount your certificates into the nginx service. To put another proxy in front,
+  change the nginx ports line to ``127.0.0.1:8346:80``. A host-nginx example is in ``reverse-proxy-examples/nginx``.
 * Optional: Some of the Gunicorn parameters can be adjusted via environment variables:
   * To adjust the number of [Gunicorn workers](https://docs.gunicorn.org/en/stable/settings.html#workers), provide
   the container with `GUNICORN_WORKERS` environment variable.

@@ -1,5 +1,9 @@
 # NGINX Config example
 
+`docker-compose.yml` already runs an nginx container. Its config is `conf/nginx.conf`.
+Use the snippet below when nginx runs on the host instead, and publish pretalx on
+`127.0.0.1:8346` only.
+
 Your config could look like this:
 
 ```
